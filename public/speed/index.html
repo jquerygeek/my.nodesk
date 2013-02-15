@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang='en'>
+<head>
+</head>
+<body>
+  <pre id='results'></pre>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+  <script>
+    var username = 'ggrey';
+    var password = 'strange!';
+    var threadId = 868751;
+    
+    setTimeout(function() {
+        runTest('Public API', '/v0', function() {
+            runTest('oRPC', '/v1', function() {
+                $('#results').append('\nDone!\n');
+            });
+        });
+    }, 750)
+    
+    function runTest(name, base, cb) {
+    
+        var startTime = Date.now();
+        var recentTime = startTime;
+        var nl = '============================\n';
+        $('#results').append(name + '\n' + nl);
+        
+        function report(method, url, done) {
+            var now = Date.now();
+            var ellapsed = now - startTime;
+            var short = now - recentTime;
+            var ellapsed = Date.now() - startTime;
+            $('#results').append(method + ' ' + url + ' took ' + short + 'ms (' + ellapsed + 'ms)\n');
+            if (done) {
+                $('#results').append(nl + 'Total: ' + ellapsed + 'ms\n\n');
+            }
+            recentTime = Date.now();
+        }
+    
+        $.post(base + '/tokens', {username: username, password: password}, function(data) {
+            report('post', base + '/tokens');
+            $.ajaxSetup({headers: {"x-odesk-auth": data.token, 'x-auth-username': username}})
+            $.get(base + '/threads', function() {
+                report('get', base + '/threads');
+                $.get(base + '/threads/' + threadId, function() {
+                    report('get', base + '/threads/' + threadId);
+                    $.post(base + '/threads/' + threadId, {username: username, threadId: threadId, body: 'hahahahah ' + Date.now()}, function() {
+                        report('post', base + '/threads/' + threadId, true);
+                        if (typeof cb === 'function') {
+                            cb();
+                        }
+                    });
+                });
+            });
+        }, 'json');
+
+    }
+        
+
+
+  </script>
+</body>
+</html>

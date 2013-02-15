@@ -1,0 +1,10 @@
+var resourceful = require('resourceful')
+var Token = module.exports = resourceful.define('token')
+var orpc = require('../engines/orpc')
+
+Token.use(orpc)
+Token.string('id')
+Token.string('token')
+Token.string('username')
+Token.string('password')
+Token.string('encryptedPassword')

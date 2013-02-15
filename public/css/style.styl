@@ -1,0 +1,115 @@
+@import 'nib'
+
+body, html {
+  background: #ccc;
+  margin: 0;
+  padding: 0;
+  font-family sans-serif
+}
+
+header {
+  background: linear-gradient(top, #999, #333);
+  color: white;
+  text-shadow -1px 0 2px black;
+  padding 3px 10px;
+}
+
+h1 {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+.template {
+  display: none;
+}
+
+* {
+  box-sizing: border-box
+}
+
+.slide {
+  width: 115px;
+  height: 115px;
+  float: left;
+  position: relative;
+  margin 0 8px 8px 0px
+  display inline-block
+  background: #333;
+  border-radius: 5px;
+  > img {
+    border-radius: 5px
+  }
+}
+
+.slide-thumb {
+  height: 100%;
+  width: 100%;
+}
+
+.slide-title
+  font-size: 14px
+  position: absolute;
+  top: 0px;
+  color: white
+  left: 5px;
+
+.r {
+  text-align: right;
+}
+
+.sub {
+  font-size: 13px;
+  color: #333;
+}
+
+.deck {
+  border-radius: 12px;
+  background: #000;
+  color: white;
+  width: 100%;
+  height: 185px;
+  max-width: 185px;
+  float: left;
+  overflow: hidden;
+  padding: 15px;
+  box-sizing: border-box;
+  margin: 0 25px 25px 0;
+}
+
+.main {
+  width: 100%;
+  background: white;
+  position: absolute;
+  top: 0;
+}
+
+.content {
+  padding: 10px;
+}
+
+.main::after {
+  content: " ";
+  display: block;
+  clear: both;
+}
+
+#add_new_deck_wrapper a 
+  font: bold 16px Arial;
+  text-decoration: underline;
+
+.add_deck_form_row 
+  padding: 5px;
+
+.add_deck_form_row label
+  display: inline-block;
+  width: 110px;
+
+.add_deck_form_row input[type='text']
+  width: 200px;
+
+.add_deck_form_row input[type='button']
+  padding: 5px;
+  margin: 0;

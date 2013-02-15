@@ -1,0 +1,195 @@
+<!DOCTYPE html>  <html> <head>   <title>v0.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="v0.html">                 v0.js               </a>                                           <a class="source" href="v1.html">                 v1.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               v0.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>oDesk Mobile API</p>
+
+<p>Version 0 (unstable)</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">)</span>
+<span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">express</span><span class="p">()</span>
+<span class="kd">var</span> <span class="nx">api</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../control/api&#39;</span><span class="p">)</span>
+<span class="kd">var</span> <span class="nx">mc</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../control/mc&#39;</span><span class="p">)</span>
+<span class="kd">var</span> <span class="nx">recruit</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../control/recruit&#39;</span><span class="p">)</span>
+<span class="kd">var</span> <span class="nx">work</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../control/work&#39;</span><span class="p">)</span>
+<span class="kd">var</span> <span class="nx">token</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../control/token&#39;</span><span class="p">)</span>
+<span class="kd">var</span> <span class="nx">team</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../control/team&#39;</span><span class="p">)</span> </pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Authentication Middleware</h2>
+
+<p>Our authentication scheme happens by getting a token and then sending that token
+in a custom header with each future request:</p>
+
+<pre><code> x-odesk-auth: token
+</code></pre>
+
+<p>The verification module also can take a whitelist that is used to specify routes
+that do not require authentication</p>
+
+<p>To the right are examples of valid and invalid tokens.</p>
+
+<p><strong>Note:</strong> <em>All of the examples assume this header is included</em></p>             </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/* whitelist these routes */</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">token</span><span class="p">.</span><span class="nx">verify</span><span class="p">([</span>
+    <span class="s1">&#39;GET /&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;POST /tokens&#39;</span>
+<span class="p">]))</span>
+
+
+<span class="cm">/*</span>
+<span class="cm">     curl http://localhost:8888/v0/threads</span>
+<span class="cm">     HTTP/1.1 404 Unauthorized</span>
+
+<span class="cm">     curl -H &quot;x-odesk-auth: BAD_TOKEN&quot; http://localhost:8888/v0/threads</span>
+<span class="cm">     HTTP/1.1 404 Unauthorized</span>
+
+<span class="cm">     curl -H &quot;x-odesk-auth: blablabla&quot; http://localhost:8888/v0/threads</span>
+<span class="cm">     HTTP/1.1 200 OK</span>
+<span class="cm">*/</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <h2>Basic API Routes</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>These generic routes are needed to support our API. They aren't very important. :)</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="nx">api</span><span class="p">.</span><span class="nx">info</span><span class="p">)</span> <span class="c1">// info route</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/feedback&#39;</span><span class="p">,</span> <span class="nx">api</span><span class="p">.</span><span class="nx">feedback</span><span class="p">)</span> <span class="c1">// provide app feedback</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <h2>Token management</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>We use oRPC to handle sessions, but as far as the app is concerned it's actually a token.
+This token actually is an oRPC session ID, but we call it tokens, so we can switch to
+oAuth 2.0 Barrer tokens at some future day.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h3>Create Tokens (login)</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/tokens&#39;</span><span class="p">,</span> <span class="nx">token</span><span class="p">.</span><span class="nx">create</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Input</p>
+
+<ul>
+<li>username</li>
+<li>password (optional)</li>
+<li>encryptedPassword (optional)</li>
+</ul>
+
+<p>Output</p>
+
+<pre><code> {
+     token: "blablabla",
+     encryptedPassword: "asdflkjDSF(*SD*UFJDS" // optional
+ }
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm">      curl -X POST http://localhost:8888/v0/tokens -d username=ggrey -d password=strange!</span>
+<span class="cm">      HTTP/1.1 201 Created</span>
+
+<span class="cm">      curl -X POST http://localhost:8888/v0/tokens -d username=ggrey -d encryptedPassword=asdflkjDSF(*SD*UFJDS</span>
+<span class="cm">      HTTP/1.1 201 Created</span>
+<span class="cm">*/</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <h3>Delete Tokens (logout)</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">app</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="s1">&#39;/tokens/:token&#39;</span><span class="p">,</span> <span class="nx">token</span><span class="p">.</span><span class="nx">del</span><span class="p">)</span>
+
+<span class="cm">/*</span>
+<span class="cm">     curl -X DELETE http://localhost:8888/v0/tokens/blablabla</span>
+<span class="cm">     HTTP/1.1 200 OK</span>
+<span class="cm">*/</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <h2>Message Center</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>This is the bread and butter of our mobile application. It's how we send messages back and
+forth between clients and contractors.</p>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <h3>Get Threads</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/threads&#39;</span><span class="p">,</span> <span class="nx">mc</span><span class="p">.</span><span class="nx">index</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>Parameters</p>
+
+<ul>
+<li>count (optional)</li>
+<li>offset (optional)</li>
+</ul>
+
+<p>Output</p>
+
+<pre><code> [{
+     id: "1234",
+     subject: "My Message",
+     participants: ["Jamund Ferguson", "Charlie Brown"],
+     preview: "Hey man...",
+     starred: false,
+     read: true,
+     count: 2, // number of messages
+     updated: 1358531968674
+ }]
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm">     curl http://localhost:8888/v0/threads</span>
+<span class="cm">     HTTP/1.1 200 OK</span>
+<span class="cm">*/</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <h3>Create a New Thread</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/threads&#39;</span><span class="p">,</span> <span class="nx">mc</span><span class="p">.</span><span class="nx">send</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>Input</p>
+
+<ul>
+<li>subject</li>
+<li>recipient</li>
+<li>body</li>
+</ul>
+
+<p>Output</p>
+
+<pre><code> {
+     id: "1234",
+     subject: "My Message",
+     participants: ["Jamund Ferguson", "Charlie Brown"],
+     preview: "Hey man...",
+     starred: false,
+     read: true,
+     count: 1,
+     updated: 1358531968674,
+     messages: [{
+         sender: "Charlie Brown",
+         read: true,
+         body: "Hey Man, I want to know what the plan is for this job."
+         created: 1358531968674,
+     }]
+ }
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm">     curl -X POST http://localhost:8888/v0/threads -d subject=yo -d body=&quot;let&#39;s chat&quot; -d recipient=jamund</span>
+<span class="cm">     HTTP/1.1 201 Created</span>
+
+<span class="cm">*/</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <h3>View a Thread</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/threads/:threadId&#39;</span><span class="p">,</span> <span class="nx">mc</span><span class="p">.</span><span class="nx">view</span><span class="p">)</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Output</p>
+
+<pre><code> {
+     id: "1234",
+     subject: "My Message",
+     participants: ["Jamund Ferguson", "Charlie Brown"],
+     preview: "Hey man...",
+     starred: false,
+     read: true,
+     count: 2, // number of messages
+     updated: 1358531968674,
+     messages: [{
+         sender: "Charlie Brown",
+         read: true,
+         body: "Hey Man, I want to know what the plan is for this job."
+         created: 1358531968674,
+     }, {
+         sender: "James brown",
+         read: false,
+         body: "When can you get me that son?."
+         created: 1358531923411,
+     }]
+ }
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm">     curl http://localhost:8888/v0/threads/1234</span>
+<span class="cm">     HTTP/1.1 200 OK</span>
+<span class="cm">*/</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <h3>Remove a Thread</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">app</span><span class="p">.</span><span class="nx">del</span><span class="p">(</span><span class="s1">&#39;/threads/:threadId&#39;</span><span class="p">,</span> <span class="nx">mc</span><span class="p">.</span><span class="nx">trash</span><span class="p">)</span> 
+
+<span class="cm">/*</span>
+<span class="cm">     curl -X DELETE http://localhost:8888/v0/threads/1234</span>
+<span class="cm">     HTTP/1.1 200 OK</span>
+<span class="cm">*/</span></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <h3>Add another message to a thread (reply)</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/threads/:threadId&#39;</span><span class="p">,</span> <span class="nx">mc</span><span class="p">.</span><span class="nx">send</span><span class="p">)</span> </pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>Input</p>
+
+<ul>
+<li>body</li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm">     curl -X POST http://localhost:8888/v0/threads/1234 -d body=&quot;This is what I think: bla bla bla&quot;</span>
+<span class="cm">     HTTP/1.1 200 OK</span>
+<span class="cm">*/</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <h3>Update a thread (star/unstar/etc)</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">app</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="s1">&#39;/threads/:threadId&#39;</span><span class="p">,</span> <span class="nx">mc</span><span class="p">.</span><span class="nx">update</span><span class="p">)</span> </pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>Input</p>
+
+<ul>
+<li>starred (optional)</li>
+</ul>             </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm">     curl -X PUT http://localhost:8888/v0/threads/1234 -d starred=true</span>
+<span class="cm">     HTTP/1.1 200 OK</span>
+
+<span class="cm">     curl -X PUT http://localhost:8888/v0/threads/1234 -d starred=false</span>
+<span class="cm">     HTTP/1.1 200 OK</span>
+<span class="cm">*/</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <h3>Retreive the Contact List</h3>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/contacts&#39;</span><span class="p">,</span> <span class="nx">mc</span><span class="p">.</span><span class="nx">contacts</span><span class="p">)</span> </pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>Output</p>
+
+<pre><code> [{
+     name: "Jamund Ferguson",
+     username: "jamund",
+     id: "1234-jamund",
+     firstName: "Jamund",
+     lastName: "Ferguson",
+     thumbnail: "http://www.odesk.com/thumb.jpg"
+ }]
+</code></pre>             </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/* </span>
+<span class="cm">    curl http://localhost:8888/v0/contacts</span>
+<span class="cm">    HTTP/1.1 200 OK</span>
+<span class="cm">*/</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <h2>Recruit</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>Some information about the recruit routes.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/companies&#39;</span><span class="p">,</span> <span class="nx">recruit</span><span class="p">.</span><span class="nx">companies</span><span class="p">)</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/jobs&#39;</span><span class="p">,</span> <span class="nx">recruit</span><span class="p">.</span><span class="nx">jobs</span><span class="p">)</span> <span class="c1">// can use get param to limit by team</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/jobs/:jobId&#39;</span><span class="p">,</span> <span class="nx">recruit</span><span class="p">.</span><span class="nx">applicants</span><span class="p">)</span> <span class="c1">// list all applicants for a job</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/applications&#39;</span><span class="p">,</span> <span class="nx">recruit</span><span class="p">.</span><span class="nx">applications</span><span class="p">)</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/applications/:applicationId&#39;</span><span class="p">,</span> <span class="nx">recruit</span><span class="p">.</span><span class="nx">application</span><span class="p">)</span> <span class="c1">// application info</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/contractors/:contractorId&#39;</span><span class="p">,</span> <span class="nx">recruit</span><span class="p">.</span><span class="nx">contractor</span><span class="p">)</span> <span class="c1">// get a contractor details</span></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <h2>Work</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>Work uses a very similar job resource to recruit, but with some small differences.
+The primary difference is that in /jobs you're seeing jobs that you have posted.
+In work you're seeing jobs that other people have posted.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/work&#39;</span><span class="p">,</span> <span class="nx">work</span><span class="p">.</span><span class="nx">index</span><span class="p">)</span> <span class="c1">// can use get param to specify query or it will return terms</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/work/searches&#39;</span><span class="p">,</span> <span class="nx">work</span><span class="p">.</span><span class="nx">searches</span><span class="p">)</span> <span class="c1">// return your old searches</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/work/:jobId&#39;</span><span class="p">,</span> <span class="nx">work</span><span class="p">.</span><span class="nx">view</span><span class="p">)</span> <span class="c1">// job details</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/work/:jobId/share&#39;</span><span class="p">,</span> <span class="nx">work</span><span class="p">.</span><span class="nx">share</span><span class="p">)</span> <span class="c1">// share a job</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="s1">&#39;/applications&#39;</span><span class="p">,</span> <span class="nx">work</span><span class="p">.</span><span class="nx">apply</span><span class="p">)</span> <span class="c1">// apply to a job</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/clients/:clientId&#39;</span><span class="p">,</span> <span class="nx">work</span><span class="p">.</span><span class="nx">client</span><span class="p">)</span> <span class="c1">// get details about a client</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
